@@ -2896,6 +2896,10 @@ Suggested Topics:`;
 
 // Extend generation logic to include new controls
 function getGenerationConfig() {
+    const timingSlider = document.getElementById('timing-slider');
+    const verbosityStyle = document.getElementById('verbosity-style');
+    const sarcasmLevelSlider = document.getElementById('sarcasm-level-slider');
+    const visualImagerySlider = document.getElementById('visual-imagery-slider');
     // This function will be expanded in the next step to include all new controls
     return {
         // Existing controls
@@ -2906,10 +2910,10 @@ function getGenerationConfig() {
         creativityLevel: +creativityLevelSlider.value,
         avoidRepetition: avoidRepetitionToggle.checked,
         jokeLength: +jokeLengthSlider.value, // This influences min/max words
-        timing: +timingSlider.value, // Assuming timingSlider is defined
-        verbosityStyle: verbosityStyle.value, // Assuming verbosityStyle is defined
-        sarcasmLevel: +sarcasmLevelSlider.value,
-        realismSurrealism: document.getElementById('realism-vs-surrealism').value,
+        timing: timingSlider ? +timingSlider.value : 3, // Default to 3 if not found
+        verbosityStyle: verbosityStyle ? verbosityStyle.value : 'concise', // Default if not found
+        sarcasmLevel: sarcasmLevelSlider ? +sarcasmLevelSlider.value : 3, // Default if not found
+        realismSurrealism: document.getElementById('realism-vs-surrealism') ? document.getElementById('realism-vs-surrealism').value : 'balanced',
         visualImagery: +visualImagerySlider.value,
         logicalCoherence: document.getElementById('logical-coherence-toggle').value,
         exaggerationMode: document.getElementById('exaggeration-mode').value,
