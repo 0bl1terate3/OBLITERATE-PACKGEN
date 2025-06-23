@@ -1688,7 +1688,10 @@ ${povInstructions[pov]}
             const influenceLabels = { 1: 'low (subtle hint)', 2: 'moderate', 3: 'balanced', 4: 'strong', 5: 'absolute (must feature prominently)' };
             configBlock += `\n- **Topic Influence:** Selected topics should have ${influenceLabels[params.topicInfluence] || 'balanced'} influence.`;
         }
+        // Content Tab - Punchline Style
         if (params.punchlineStyle) configBlock += `\n- **Punchline Style:** Deliver a ${params.punchlineStyle} punchline.`;
+        // Content Tab - Preferred Sentence Structure
+        if (params.sentenceStructure && params.sentenceStructure !== 'any') configBlock += `\n- **Preferred Sentence Structure:** ${params.sentenceStructure}.`;
 
         // humorAlgorithmMode is likely a system-level switch, not for textual prompt.
 
