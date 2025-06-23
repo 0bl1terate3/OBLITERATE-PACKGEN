@@ -6,140 +6,16 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>OBLITERATE PACKGEN</title>
 <script src="https://cdn.tailwindcss.com">
-// --- New Feature Bindings ---
-const shockValueSlider = document.getElementById('shock-value');
-const shockValueLabel = document.getElementById('shock-value-label');
-shockValueSlider.addEventListener('input', () => {
-    shockValueLabel.textContent = shockValueSlider.value;
-});
-
-// Example integration object builder (can be sent to server)
-function collectNewGenerationSettings() {
-    return {
-        themeRandomizer: document.getElementById('theme-randomizer-toggle').checked,
-        preferredNounCount: parseInt(document.getElementById('noun-count').value),
-        verbDensity: parseInt(document.getElementById('verb-density').value),
-        sentenceRhythm: document.getElementById('sentence-rhythm').value,
-        backstory: document.getElementById('backstory-injection').value.trim(),
-        emotionArc: document.getElementById('emotion-arc').value,
-        shockValue: parseInt(document.getElementById('shock-value').value),
-        callbackCount: parseInt(document.getElementById('callback-count').value),
-        conflictType: document.getElementById('conflict-type').value,
-        generationSeed: document.getElementById('generation-seed').value.trim()
-    };
-}
-
-// Hook into main generation button (can be sent to server or model)
-generateBtn.addEventListener('click', () => {
-    const extraSettings = collectNewGenerationSettings();
-    console.log("Sending all settings to server:", extraSettings);
-    // Optionally merge with other config and POST to server
-    // fetch('/api/generate', { method: 'POST', body: JSON.stringify({ ...otherSettings, ...extraSettings }) })
-});
-
 </script>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap" rel="stylesheet"/>
 <!-- JS Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js">
-// --- New Feature Bindings ---
-const shockValueSlider = document.getElementById('shock-value');
-const shockValueLabel = document.getElementById('shock-value-label');
-shockValueSlider.addEventListener('input', () => {
-    shockValueLabel.textContent = shockValueSlider.value;
-});
-
-// Example integration object builder (can be sent to server)
-function collectNewGenerationSettings() {
-    return {
-        themeRandomizer: document.getElementById('theme-randomizer-toggle').checked,
-        preferredNounCount: parseInt(document.getElementById('noun-count').value),
-        verbDensity: parseInt(document.getElementById('verb-density').value),
-        sentenceRhythm: document.getElementById('sentence-rhythm').value,
-        backstory: document.getElementById('backstory-injection').value.trim(),
-        emotionArc: document.getElementById('emotion-arc').value,
-        shockValue: parseInt(document.getElementById('shock-value').value),
-        callbackCount: parseInt(document.getElementById('callback-count').value),
-        conflictType: document.getElementById('conflict-type').value,
-        generationSeed: document.getElementById('generation-seed').value.trim()
-    };
-}
-
-// Hook into main generation button (can be sent to server or model)
-generateBtn.addEventListener('click', () => {
-    const extraSettings = collectNewGenerationSettings();
-    console.log("Sending all settings to server:", extraSettings);
-    // Optionally merge with other config and POST to server
-    // fetch('/api/generate', { method: 'POST', body: JSON.stringify({ ...otherSettings, ...extraSettings }) })
-});
-
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-// --- New Feature Bindings ---
-const shockValueSlider = document.getElementById('shock-value');
-const shockValueLabel = document.getElementById('shock-value-label');
-shockValueSlider.addEventListener('input', () => {
-    shockValueLabel.textContent = shockValueSlider.value;
-});
-
-// Example integration object builder (can be sent to server)
-function collectNewGenerationSettings() {
-    return {
-        themeRandomizer: document.getElementById('theme-randomizer-toggle').checked,
-        preferredNounCount: parseInt(document.getElementById('noun-count').value),
-        verbDensity: parseInt(document.getElementById('verb-density').value),
-        sentenceRhythm: document.getElementById('sentence-rhythm').value,
-        backstory: document.getElementById('backstory-injection').value.trim(),
-        emotionArc: document.getElementById('emotion-arc').value,
-        shockValue: parseInt(document.getElementById('shock-value').value),
-        callbackCount: parseInt(document.getElementById('callback-count').value),
-        conflictType: document.getElementById('conflict-type').value,
-        generationSeed: document.getElementById('generation-seed').value.trim()
-    };
-}
-
-// Hook into main generation button (can be sent to server or model)
-generateBtn.addEventListener('click', () => {
-    const extraSettings = collectNewGenerationSettings();
-    console.log("Sending all settings to server:", extraSettings);
-    // Optionally merge with other config and POST to server
-    // fetch('/api/generate', { method: 'POST', body: JSON.stringify({ ...otherSettings, ...extraSettings }) })
-});
-
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.2/vanilla-tilt.min.js">
-// --- New Feature Bindings ---
-const shockValueSlider = document.getElementById('shock-value');
-const shockValueLabel = document.getElementById('shock-value-label');
-shockValueSlider.addEventListener('input', () => {
-    shockValueLabel.textContent = shockValueSlider.value;
-});
-
-// Example integration object builder (can be sent to server)
-function collectNewGenerationSettings() {
-    return {
-        themeRandomizer: document.getElementById('theme-randomizer-toggle').checked,
-        preferredNounCount: parseInt(document.getElementById('noun-count').value),
-        verbDensity: parseInt(document.getElementById('verb-density').value),
-        sentenceRhythm: document.getElementById('sentence-rhythm').value,
-        backstory: document.getElementById('backstory-injection').value.trim(),
-        emotionArc: document.getElementById('emotion-arc').value,
-        shockValue: parseInt(document.getElementById('shock-value').value),
-        callbackCount: parseInt(document.getElementById('callback-count').value),
-        conflictType: document.getElementById('conflict-type').value,
-        generationSeed: document.getElementById('generation-seed').value.trim()
-    };
-}
-
-// Hook into main generation button (can be sent to server or model)
-generateBtn.addEventListener('click', () => {
-    const extraSettings = collectNewGenerationSettings();
-    console.log("Sending all settings to server:", extraSettings);
-    // Optionally merge with other config and POST to server
-    // fetch('/api/generate', { method: 'POST', body: JSON.stringify({ ...otherSettings, ...extraSettings }) })
-});
-
 </script>
 <style>
         :root {
@@ -1451,7 +1327,6 @@ anime, k-pop" rows="2"></textarea>
         const customInstructionInjectionTextarea = document.getElementById('custom-instruction-injection');
         
         // --- Existing Content control elements ---
-        const timingSlider = document.getElementById('timing-slider'); // Added missing definition
         const minWordsInput = document.getElementById('min-words');
         const maxWordsInput = document.getElementById('max-words');
         const complexityLevelSlider = document.getElementById('complexity-level');
@@ -3031,8 +2906,8 @@ function getGenerationConfig() {
         creativityLevel: +creativityLevelSlider.value,
         avoidRepetition: avoidRepetitionToggle.checked,
         jokeLength: +jokeLengthSlider.value, // This influences min/max words
-        timing: timingSlider ? +timingSlider.value : 3, // Check if timingSlider is defined before accessing value
-        verbosityStyle: verbosityStyle ? verbosityStyle.value : 'narrative', // Check if verbosityStyle is defined
+        timing: +timingSlider.value, // Assuming timingSlider is defined
+        verbosityStyle: verbosityStyle.value, // Assuming verbosityStyle is defined
         sarcasmLevel: +sarcasmLevelSlider.value,
         realismSurrealism: document.getElementById('realism-vs-surrealism').value,
         visualImagery: +visualImagerySlider.value,
