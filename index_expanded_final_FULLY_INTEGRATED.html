@@ -1451,6 +1451,7 @@ anime, k-pop" rows="2"></textarea>
         const customInstructionInjectionTextarea = document.getElementById('custom-instruction-injection');
         
         // --- Existing Content control elements ---
+        const timingSlider = document.getElementById('timing-slider'); // Added missing definition
         const minWordsInput = document.getElementById('min-words');
         const maxWordsInput = document.getElementById('max-words');
         const complexityLevelSlider = document.getElementById('complexity-level');
@@ -3030,8 +3031,8 @@ function getGenerationConfig() {
         creativityLevel: +creativityLevelSlider.value,
         avoidRepetition: avoidRepetitionToggle.checked,
         jokeLength: +jokeLengthSlider.value, // This influences min/max words
-        timing: +timingSlider.value, // Assuming timingSlider is defined
-        verbosityStyle: verbosityStyle.value, // Assuming verbosityStyle is defined
+        timing: timingSlider ? +timingSlider.value : 3, // Check if timingSlider is defined before accessing value
+        verbosityStyle: verbosityStyle ? verbosityStyle.value : 'narrative', // Check if verbosityStyle is defined
         sarcasmLevel: +sarcasmLevelSlider.value,
         realismSurrealism: document.getElementById('realism-vs-surrealism').value,
         visualImagery: +visualImagerySlider.value,
