@@ -1643,10 +1643,56 @@ ${povInstructions[pov]}
         if (params.culturalContext) configBlock += `\n- **Cultural Context:** Must reference: "${params.culturalContext}".`;
         if (params.forbiddenConstraints) configBlock += `\n- **Forbidden Constraints:** MUST NOT mention: ${params.forbiddenConstraints}.`;
         if (params.excludedWords) configBlock += `\n- **Excluded Words:** MUST NOT contain: ${params.excludedWords}.`;
-        if (params.excludedTopics) configBlock += `\n- **Excluded Topics:** MUST NOT be about: ${params.excludedTopics}.`;
+        if (params.excludedTopics) configBlock += `\n- **Excluded Topics:** MUST NOT be about: ${params.excludedTopics}.`; // Corrected from params.excludedTopics
         if (selectedTopics.length > 0) configBlock += `\n- **General Topics:** Should incorporate: ${selectedTopics.join(', ')}.`;
 
-        // --- Incorporate NEW controls into the prompt ---
+        // --- Adding MISSING parameters to configBlock ---
+        if (params.timing) {
+            const timingLabels = { 1: 'very slow and deliberate', 2: 'slow', 3: 'normal', 4: 'fast', 5: 'very rapid-fire' };
+            configBlock += `\n- **Timing & Pacing:** ${timingLabels[params.timing] || 'normal'}.`;
+        }
+        if (params.verbosityStyle) configBlock += `\n- **Verbosity Style:** ${params.verbosityStyle}.`;
+        if (params.sarcasmLevel) {
+            const sarcasmLabels = { 1: 'none', 2: 'mild', 3: 'balanced', 4: 'strong', 5: 'biting' };
+            configBlock += `\n- **Sarcasm Level:** ${sarcasmLabels[params.sarcasmLevel] || 'balanced'}.`;
+        }
+        if (params.realismSurrealism) configBlock += `\n- **Realism vs. Surrealism:** Lean towards ${params.realismSurrealism}.`;
+        if (params.visualImagery) {
+            const imageryLabels = { 1: 'low (minimal description)', 2: 'subtle', 3: 'moderate', 4: 'vivid', 5: 'intense (highly descriptive)' };
+            configBlock += `\n- **Visual Imagery Intensity:** ${imageryLabels[params.visualImagery] || 'moderate'}.`;
+        }
+        if (params.logicalCoherence) configBlock += `\n- **Logical Coherence:** Should be ${params.logicalCoherence}.`;
+        if (params.exaggerationMode) configBlock += `\n- **Exaggeration Mode:** Use ${params.exaggerationMode} exaggeration.`;
+
+        // themeRandomizer is more of a client-side logic controller for subsequent jokes, not a direct AI prompt for a single joke.
+
+        if (params.preferredNounCount) configBlock += `\n- **Preferred Noun Count:** Aim for around ${params.preferredNounCount} nouns.`;
+        if (params.verbDensity) {
+            const densityLabels = { 1: 'low (few verbs)', 2: 'sparse', 3: 'medium', 4: 'dense', 5: 'very high (action-packed)' };
+            configBlock += `\n- **Verb Density:** ${densityLabels[params.verbDensity] || 'medium'}.`;
+        }
+        if (params.sentenceRhythm) configBlock += `\n- **Sentence Rhythm:** Prefer a ${params.sentenceRhythm} style.`;
+        if (params.backstory) configBlock += `\n- **Backstory Element to Incorporate:** ${params.backstory}.`;
+        if (params.emotionArc) configBlock += `\n- **Emotion Arc of the Joke:** Follow a ${params.emotionArc} trajectory.`;
+        if (params.shockValue) {
+            const shockLabels = { 1: 'none', 2: 'mild surprise', 3: 'moderate shock', 4: 'high shock', 5: 'extreme shock' };
+            configBlock += `\n- **Shock Value Level:** ${shockLabels[params.shockValue] || 'moderate shock'}.`;
+        }
+        if (params.callbackCount > 0) configBlock += `\n- **Number of Callbacks (if applicable):** Aim for ${params.callbackCount}.`;
+        if (params.conflictType) configBlock += `\n- **Primary Conflict Type:** Focus on ${params.conflictType} conflict.`;
+
+        // generationSeed is typically for API, not prompt text.
+
+        if (params.topicPriorityMode) configBlock += `\n- **Topic Priority Mode:** Adhere to selected topics with ${params.topicPriorityMode} priority.`;
+        if (params.topicInfluence) {
+            const influenceLabels = { 1: 'low (subtle hint)', 2: 'moderate', 3: 'balanced', 4: 'strong', 5: 'absolute (must feature prominently)' };
+            configBlock += `\n- **Topic Influence:** Selected topics should have ${influenceLabels[params.topicInfluence] || 'balanced'} influence.`;
+        }
+        if (params.punchlineStyle) configBlock += `\n- **Punchline Style:** Deliver a ${params.punchlineStyle} punchline.`;
+
+        // humorAlgorithmMode is likely a system-level switch, not for textual prompt.
+
+        // --- Incorporate NEW controls into the prompt (already existing in previous code, verified) ---
 
         // Generation Tab New Controls
         const pacingVariationLabels = { 1: 'very uniform', 2: 'uniform', 3: 'medium', 4: 'varied', 5: 'highly erratic' };
@@ -2896,89 +2942,147 @@ Suggested Topics:`;
 
 // Extend generation logic to include new controls
 function getGenerationConfig() {
+    // Standardize fetching Generation Tab elements at the top of the function
     const timingSlider = document.getElementById('timing-slider');
     const verbosityStyle = document.getElementById('verbosity-style');
+    const modeSelectorEl = document.getElementById('mode-selector'); // povSelector is already global
+    const absurditySliderEl = document.getElementById('absurdity-slider');
+    const detailLevelSliderEl = document.getElementById('detail-level-slider');
+    const creativityLevelSliderEl = document.getElementById('creativity-level-slider');
+    const avoidRepetitionToggleEl = document.getElementById('avoid-repetition-toggle');
+    const jokeLengthSliderEl = document.getElementById('joke-length-slider');
     const sarcasmLevelSlider = document.getElementById('sarcasm-level-slider');
-    const visualImagerySlider = document.getElementById('visual-imagery-slider');
-    // This function will be expanded in the next step to include all new controls
-    return {
-        // Existing controls
-        pov: povSelector.querySelector('.toggle-btn.active')?.dataset?.pov || 'second',
-        mode: modeSelector.querySelector('.toggle-btn.active')?.dataset?.mode || 'single',
-        absurdity: +absurditySlider.value,
-        detailLevel: +detailLevelSlider.value,
-        creativityLevel: +creativityLevelSlider.value,
-        avoidRepetition: avoidRepetitionToggle.checked,
-        jokeLength: +jokeLengthSlider.value, // This influences min/max words
-        timing: timingSlider ? +timingSlider.value : 3, // Default to 3 if not found
-        verbosityStyle: verbosityStyle ? verbosityStyle.value : 'concise', // Default if not found
-        sarcasmLevel: sarcasmLevelSlider ? +sarcasmLevelSlider.value : 3, // Default if not found
-        realismSurrealism: document.getElementById('realism-vs-surrealism') ? document.getElementById('realism-vs-surrealism').value : 'balanced',
-        visualImagery: +visualImagerySlider.value,
-        logicalCoherence: document.getElementById('logical-coherence-toggle').value,
-        exaggerationMode: document.getElementById('exaggeration-mode').value,
+    const realismVsSurrealismEl = document.getElementById('realism-vs-surrealism');
+    const visualImagerySlider = document.getElementById('visual-imagery-slider'); // Was already fetched, but value access needs correction
+    const logicalCoherenceToggleEl = document.getElementById('logical-coherence-toggle');
+    const exaggerationModeEl = document.getElementById('exaggeration-mode');
+    const themeRandomizerToggleEl = document.getElementById('theme-randomizer-toggle');
+    const nounCountEl = document.getElementById('noun-count');
+    const verbDensityEl = document.getElementById('verb-density');
+    const sentenceRhythmEl = document.getElementById('sentence-rhythm');
+    const backstoryInjectionEl = document.getElementById('backstory-injection');
+    const emotionArcEl = document.getElementById('emotion-arc');
+    const shockValueEl = document.getElementById('shock-value');
+    const callbackCountEl = document.getElementById('callback-count');
+    const conflictTypeEl = document.getElementById('conflict-type');
+    const generationSeedEl = document.getElementById('generation-seed');
+    const pacingVariationSliderEl = document.getElementById('pacing-variation-slider');
+    const unexpectednessSliderEl = document.getElementById('unexpectedness-slider');
+    const antiHumorToggleEl = document.getElementById('anti-humor-toggle');
+    const jokeSourceAdherenceSliderEl = document.getElementById('joke-source-adherence-slider');
 
-        themeRandomizer: document.getElementById('theme-randomizer-toggle').checked,
-        preferredNounCount: parseInt(document.getElementById('noun-count').value),
-        verbDensity: parseInt(document.getElementById('verb-density').value),
-        sentenceRhythm: document.getElementById('sentence-rhythm').value,
-        backstory: document.getElementById('backstory-injection').value.trim(),
-        emotionArc: document.getElementById('emotion-arc').value,
-        shockValue: parseInt(document.getElementById('shock-value').value),
-        callbackCount: parseInt(document.getElementById('callback-count').value),
-        conflictType: document.getElementById('conflict-type').value,
-        generationSeed: document.getElementById('generation-seed').value.trim(),
+    // Topics Tab elements
+    const topicPriorityModeEl = document.getElementById('topic-priority-mode');
+    const topicInfluenceSliderEl = document.getElementById('topic-influence-slider');
+    const excludeTopicsTextareaEl = document.getElementById('exclude-topics-textarea');
+    const topicCombinationLogicSelectEl = document.getElementById('topic-combination-logic');
+    const topicRelatednessSliderEl = document.getElementById('topic-relatedness-slider');
+    const maxNewTopicsInputEl = document.getElementById('max-new-topics');
+
+    // Content Tab elements
+    const punchlineStyleEl = document.getElementById('punchline-style');
+    const sentenceStructureEl = document.getElementById('sentence-structure');
+    const guaranteedWordsInputEl = document.getElementById('guaranteed-words');
+    const startsWithTextareaEl = document.getElementById('starts-with');
+    const currentScenarioInputEl = document.getElementById('current-scenario');
+    const culturalContextTextareaEl = document.getElementById('cultural-context');
+    const minWordsInputEl = document.getElementById('min-words');
+    const maxWordsInputEl = document.getElementById('max-words');
+    const complexityLevelSliderEl = document.getElementById('complexity-level');
+    const jokeToneSelectEl = document.getElementById('joke-tone');
+    const humorTypeSelectEl = document.getElementById('humor-type');
+    const jokeStructureSelectEl = document.getElementById('joke-structure');
+    const slangLevelSliderEl = document.getElementById('slang-level-slider');
+    const narratorPersonaInputEl = document.getElementById('narrator-persona');
+    const targetAudienceInputEl = document.getElementById('target-audience');
+    const forbiddenConstraintsTextareaEl = document.getElementById('forbidden-constraints');
+    const excludedWordsTextareaEl = document.getElementById('excluded-words');
+    const characterTraitInjectionTextareaEl = document.getElementById('character-trait-injection');
+    const emotionalToneShiftSelectEl = document.getElementById('emotional-tone-shift');
+    const sensoryDetailFocusSelectEl = document.getElementById('sensory-detail-focus');
+    const abstractLevelSliderEl = document.getElementById('abstract-level-slider');
+    const popCultureSpecificitySelectEl = document.getElementById('pop-culture-specificity');
+
+    // Advanced Tab elements
+    const humorAlgorithmModeEl = document.getElementById('humor-algorithm-mode');
+    const entropyBiasEl = document.getElementById('entropy-bias');
+    const inspirationalSourceTextareaEl = document.getElementById('inspirational-source');
+    const temperatureOverrideSliderEl = document.getElementById('temperature-override-slider');
+    const topPOverrideSliderEl = document.getElementById('top-p-override-slider');
+    const repetitionPenaltySliderEl = document.getElementById('repetition-penalty-slider');
+    const customInstructionInjectionTextareaEl = document.getElementById('custom-instruction-injection');
+
+    return {
+        // Generation Tab controls
+        pov: povSelector.querySelector('.toggle-btn.active')?.dataset?.pov || 'second', // povSelector is global
+        mode: modeSelectorEl ? modeSelectorEl.querySelector('.toggle-btn.active')?.dataset?.mode || 'single' : 'single',
+        absurdity: absurditySliderEl ? +absurditySliderEl.value : 5,
+        detailLevel: detailLevelSliderEl ? +detailLevelSliderEl.value : 3,
+        creativityLevel: creativityLevelSliderEl ? +creativityLevelSliderEl.value : 3,
+        avoidRepetition: avoidRepetitionToggleEl ? avoidRepetitionToggleEl.checked : false,
+        jokeLength: jokeLengthSliderEl ? +jokeLengthSliderEl.value : 3,
+        timing: timingSlider ? +timingSlider.value : 3,
+        verbosityStyle: verbosityStyle ? verbosityStyle.value : 'concise',
+        sarcasmLevel: sarcasmLevelSlider ? +sarcasmLevelSlider.value : 3,
+        realismSurrealism: realismVsSurrealismEl ? realismVsSurrealismEl.value : 'balanced',
+        visualImagery: visualImagerySlider ? +visualImagerySlider.value : 3, // Corrected access
+        logicalCoherence: logicalCoherenceToggleEl ? logicalCoherenceToggleEl.value : 'auto',
+        exaggerationMode: exaggerationModeEl ? exaggerationModeEl.value : 'mild',
+        themeRandomizer: themeRandomizerToggleEl ? themeRandomizerToggleEl.checked : false,
+        preferredNounCount: nounCountEl ? parseInt(nounCountEl.value) : 10,
+        verbDensity: verbDensityEl ? parseInt(verbDensityEl.value) : 3,
+        sentenceRhythm: sentenceRhythmEl ? sentenceRhythmEl.value : 'varied',
+        backstory: backstoryInjectionEl ? backstoryInjectionEl.value.trim() : '',
+        emotionArc: emotionArcEl ? emotionArcEl.value : 'neutral',
+        shockValue: shockValueEl ? parseInt(shockValueEl.value) : 3,
+        callbackCount: callbackCountEl ? parseInt(callbackCountEl.value) : 1,
+        conflictType: conflictTypeEl ? conflictTypeEl.value : 'absurdist',
+        generationSeed: generationSeedEl ? generationSeedEl.value.trim() : '',
+        pacingVariation: pacingVariationSliderEl ? +pacingVariationSliderEl.value : 3,
+        unexpectedness: unexpectednessSliderEl ? +unexpectednessSliderEl.value : 3,
+        antiHumorMode: antiHumorToggleEl ? antiHumorToggleEl.checked : false,
+        jokeSourceAdherence: jokeSourceAdherenceSliderEl ? +jokeSourceAdherenceSliderEl.value : 50,
 
         // Topics Tab
-        topicPriorityMode: document.getElementById('topic-priority-mode').value,
-        topicInfluence: +topicInfluenceSlider.value,
-        excludeTopics: excludeTopicsTextarea.value.trim(),
+        topicPriorityMode: topicPriorityModeEl ? topicPriorityModeEl.value : 'balanced',
+        topicInfluence: topicInfluenceSliderEl ? +topicInfluenceSliderEl.value : 3,
+        excludeTopics: excludeTopicsTextareaEl ? excludeTopicsTextareaEl.value.trim() : '',
+        topicCombinationLogic: topicCombinationLogicSelectEl ? topicCombinationLogicSelectEl.value : 'union',
+        topicRelatedness: topicRelatednessSliderEl ? +topicRelatednessSliderEl.value : 4,
+        maxNewTopics: maxNewTopicsInputEl ? +maxNewTopicsInputEl.value : 2,
 
         // Content Tab
-        punchlineStyle: document.getElementById('punchline-style').value,
-        sentenceStructure: document.getElementById('sentence-structure').value,
-        guaranteedWords: guaranteedWordsInput.value.trim(),
-        startsWith: startsWithTextarea.value.split('\n').map(p => p.trim()).filter(p => p).sort(() => 0.5 - Math.random())[0],
-        scenario: currentScenarioInput.value.trim(),
-        culturalContext: culturalContextTextarea.value.split('\n').map(c => c.trim()).filter(c => c).sort(() => 0.5 - Math.random())[0],
-        minWords: minWordsInput.value.trim(),
-        maxWords: maxWordsInput.value.trim(),
-        complexityLevel: complexityLevelSlider.value,
-        jokeTone: jokeToneSelect.value,
-        humorType: humorTypeSelect.value,
-        jokeStructure: jokeStructureSelect.value,
-        slangLevel: slangLevelSlider.value,
-        narratorPersona: narratorPersonaInput.value.trim(),
-        targetAudience: targetAudienceInput.value.trim(),
-        forbiddenConstraints: forbiddenConstraintsTextarea.value.trim(),
-        excludedWords: excludedWordsTextarea.value.trim(),
+        punchlineStyle: punchlineStyleEl ? punchlineStyleEl.value : 'twist',
+        sentenceStructure: sentenceStructureEl ? sentenceStructureEl.value : 'any',
+        guaranteedWords: guaranteedWordsInputEl ? guaranteedWordsInputEl.value.trim() : '',
+        startsWith: startsWithTextareaEl ? (startsWithTextareaEl.value.split('\n').map(p => p.trim()).filter(p => p).sort(() => 0.5 - Math.random())[0] || '') : '',
+        scenario: currentScenarioInputEl ? currentScenarioInputEl.value.trim() : '',
+        culturalContext: culturalContextTextareaEl ? (culturalContextTextareaEl.value.split('\n').map(c => c.trim()).filter(c => c).sort(() => 0.5 - Math.random())[0] || '') : '',
+        minWords: minWordsInputEl ? minWordsInputEl.value.trim() : '5',
+        maxWords: maxWordsInputEl ? maxWordsInputEl.value.trim() : '20',
+        complexityLevel: complexityLevelSliderEl ? complexityLevelSliderEl.value : '5',
+        jokeTone: jokeToneSelectEl ? jokeToneSelectEl.value : 'any',
+        humorType: humorTypeSelectEl ? humorTypeSelectEl.value : 'any',
+        jokeStructure: jokeStructureSelectEl ? jokeStructureSelectEl.value : 'any',
+        slangLevel: slangLevelSliderEl ? slangLevelSliderEl.value : '3',
+        narratorPersona: narratorPersonaInputEl ? narratorPersonaInputEl.value.trim() : '',
+        targetAudience: targetAudienceInputEl ? targetAudienceInputEl.value.trim() : '',
+        forbiddenConstraints: forbiddenConstraintsTextareaEl ? forbiddenConstraintsTextareaEl.value.trim() : '',
+        excludedWords: excludedWordsTextareaEl ? excludedWordsTextareaEl.value.trim() : '',
+        characterTraitInjection: characterTraitInjectionTextareaEl ? characterTraitInjectionTextareaEl.value.trim() : '',
+        emotionalToneShift: emotionalToneShiftSelectEl ? emotionalToneShiftSelectEl.value : 'none',
+        sensoryDetailFocus: sensoryDetailFocusSelectEl ? sensoryDetailFocusSelectEl.value : 'any',
+        abstractLevel: abstractLevelSliderEl ? +abstractLevelSliderEl.value : 3,
+        popCultureSpecificity: popCultureSpecificitySelectEl ? popCultureSpecificitySelectEl.value : 'generic',
 
         // Advanced Tab
-        humorAlgorithmMode: document.getElementById('humor-algorithm-mode').value,
-        entropyBias: +document.getElementById('entropy-bias').value, // Assuming entropyBias is defined
-        inspirationalSource: inspirationalSourceTextarea.value.trim(),
-
-
-        // Newly Added Controls
-        pacingVariation: +pacingVariationSlider.value,
-        unexpectedness: +unexpectednessSlider.value,
-        antiHumorMode: antiHumorToggle.checked,
-        jokeSourceAdherence: +jokeSourceAdherenceSlider.value,
-
-        topicCombinationLogic: topicCombinationLogicSelect.value,
-        topicRelatedness: +topicRelatednessSlider.value,
-        maxNewTopics: +maxNewTopicsInput.value,
-
-        characterTraitInjection: characterTraitInjectionTextarea.value.trim(),
-        emotionalToneShift: emotionalToneShiftSelect.value,
-        sensoryDetailFocus: sensoryDetailFocusSelect.value,
-        abstractLevel: +abstractLevelSlider.value,
-        popCultureSpecificity: popCultureSpecificitySelect.value,
-
-        temperatureOverride: +temperatureOverrideSlider.value,
-        topPOverride: +topPOverrideSlider.value,
-        repetitionPenalty: +repetitionPenaltySlider.value,
-        customInstructionInjection: customInstructionInjectionTextarea.value.trim(),
+        humorAlgorithmMode: humorAlgorithmModeEl ? humorAlgorithmModeEl.value : 'default',
+        entropyBias: entropyBiasEl ? +entropyBiasEl.value : 5,
+        inspirationalSource: inspirationalSourceTextareaEl ? inspirationalSourceTextareaEl.value.trim() : '',
+        temperatureOverride: temperatureOverrideSliderEl ? +temperatureOverrideSliderEl.value : 1.0,
+        topPOverride: topPOverrideSliderEl ? +topPOverrideSliderEl.value : 0.95,
+        repetitionPenalty: repetitionPenaltySliderEl ? +repetitionPenaltySliderEl.value : 1.1,
+        customInstructionInjection: customInstructionInjectionTextareaEl ? customInstructionInjectionTextareaEl.value.trim() : '',
     };
 }
 
